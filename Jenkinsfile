@@ -4,7 +4,18 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/sabirrafiq/reactjs-demo.git'
+                script {
+                    env.each { key, value ->
+                        echo "test ${key} = ${value}"
+                    }
+                    if (env.BRANCH_NAME == 'dev') {
+                        git branch: 'dev', url: 'https://github.com/sabirrafiq/reactjs-demo.git'
+                    } else if (env.BRANCH_NAME == 'master') {
+                        git branch: 'master', url: 'https://github.com/sabirrafiq/reactjs-demo.git'
+                    } else {
+                        error "Unsupported branch: ${env.BRANCH_NAME}"
+                    }
+                }
             }
         }
         
