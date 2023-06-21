@@ -44,14 +44,19 @@ pipeline {
         
         stage('Deploy to AWS') {
             steps {
-                // Add your AWS deployment steps here
+                sshagent(['ssh-key']) {
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@13.235.68.196 'docker pull sabirrafiq/devrepo:latest'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@13.235.68.196 'docker stop my-app-container || true'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@13.235.68.196 'docker rm my-app-container || true'"
+                    sh "ssh -o StrictHostKeyChecking=no ec2-user@13.235.68.196 'docker run -d -p 80:80 --name my-app-container sabirrafiq/devrepo:latest'"
+                }
             }
         }
         
-        stage('Monitoring') {
-            steps {
-                // Add your monitoring setup steps here
-            }
-        }
+        // stage('Monitoring') {
+        //     steps {
+        //         // Add your monitoring setup steps here
+        //     }
+        // }
     }
 }
