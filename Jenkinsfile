@@ -30,7 +30,7 @@ pipeline {
         
         stage('Push Docker Image to Prod Repo') {
             when {
-                branch 'main'
+                branch 'master'
             }
             steps {
                 script {
